@@ -18,7 +18,8 @@
 <script>
 import SalarySlip from '@/components/slips/SalarySlip.vue';
 import SalarySlipDownloader from '@/components/slips/SalarySlipDownloader.vue';
-import { mapState } from 'vuex';
+import { usePayrollStore } from '@/store/modules/payroll';
+import { storeToRefs } from 'pinia';
 
 export default {
   components: {

@@ -1,42 +1,60 @@
-const state = {
-  salarySlips: [],
-};
+import { defineStore } from 'pinia';
 
-const mutations = {
-  ADD_SALARY_SLIP(state, slip) {
-    state.salarySlips.push(slip);
+export const useSalarySlipsStore = defineStore('salarySlips', {
+  state: () => ({
+    salarySlips: [],
+    isLoading: false,
+    error: null
+  }),
+  
+  getters: {
+    allSalarySlips: (state) => state.salarySlips,
+    getSalarySlipById: (state) => (id) => {
+      return state.salarySlips.find(slip => slip.id === id);
+    },
   },
-  REMOVE_SALARY_SLIP(state, slipId) {
-    state.salarySlips = state.salarySlips.filter(slip => slip.id !== slipId);
-  },
-  SET_SALARY_SLIPS(state, slips) {
-    state.salarySlips = slips;
-  },
-};
-
-const actions = {
-  addSalarySlip({ commit }, slip) {
-    commit('ADD_SALARY_SLIP', slip);
-  },
-  removeSalarySlip({ commit }, slipId) {
-    commit('REMOVE_SALARY_SLIP', slipId);
-  },
-  fetchSalarySlips({ commit }) {
-    // Fetch salary slips from an API or database
-    // commit('SET_SALARY_SLIPS', fetchedSlips);
-  },
-};
-
-const getters = {
-  allSalarySlips: (state) => state.salarySlips,
-  getSalarySlipById: (state) => (id) => {
-    return state.salarySlips.find(slip => slip.id === id);
-  },
-};
-
-export default {
-  state,
-  mutations,
-  actions,
-  getters,
-};
+  
+  actions: {
+    addSalarySlip(slip) {
+      // Di Pinia, kita langsung ubah state tanpa commit
+      this.salarySlips.push(slip);
+    },
+    
+    removeSalarySlip(slipId) {
+      // Langsung ubah state
+      this.salarySlips = this.salarySlips.filter(slip => slip.id !== slipId);
+    },
+    
+    async fetchSalarySlips() {
+      this.isLoading = true;
+      try {
+        // Untuk development, gunakan data dummy
+        this.salarySlips = [
+          {
+            id: 1,
+            employeeId: 1,
+            employeeName: 'Budi Santoso',
+            period: '2025-06',
+            amount: 11000000
+          },
+          {
+            id: 2, 
+            employeeId: 2,
+            employeeName: 'Siti Nurhayati',
+            period: '2025-06',
+            amount: 5700000
+          }
+        ];
+        
+        // Untuk implementasi API nanti:
+        // const response = await fetch('/api/salary-slips');
+        // const data = await response.json();
+        // this.salarySlips = data;
+      } catch (error) {
+        this.error = error.message;
+      } finally {
+        this.isLoading = false;
+      }
+    }
+  }
+});

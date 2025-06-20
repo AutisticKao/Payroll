@@ -34,7 +34,8 @@
 <script>
 import PayrollPeriodSelector from '@/components/payroll/PayrollPeriodSelector.vue';
 import SalaryForm from '@/components/payroll/SalaryForm.vue';
-import { mapState } from 'vuex';
+import { usePayrollStore } from '@/store/modules/payroll';
+import { storeToRefs } from 'pinia';
 import { formatCurrency } from '@/utils/currencyFormatter.js';
 
 export default {
